@@ -136,3 +136,5 @@ dmypy.json
 .pyre/
 
 # End of https://www.toptal.com/developers/gitignore/api/django
+
+static_root/
