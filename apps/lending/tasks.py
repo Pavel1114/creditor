@@ -2,6 +2,7 @@ import requests
 from django.core.exceptions import ValidationError
 
 from apps.lending.models import Application
+from config.celery import app
 
 
 def program_validator(application):
@@ -30,6 +31,7 @@ def iin_is_ip_validator(application):
 validators = [iin_is_ip_validator, program_validator]
 
 
+@app.task
 def check_application(application_pk):
     application = Application.objects.get(pk=application_pk)
     try:

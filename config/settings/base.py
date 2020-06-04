@@ -81,3 +81,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = env.str('CREDITOR_DJANGO_STATIC_ROOT', str(ROOT_PATH / 'static_root'))
 STATICFILES_DIRS = [str(ROOT_PATH / 'static')]
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
+CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', default='redis://redis:6379/0')
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
