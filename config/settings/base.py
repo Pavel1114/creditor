@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.users.apps.UserConfig',
+    'apps.lending.apps.LendingConfig',
 ]
 
 MIDDLEWARE = [
