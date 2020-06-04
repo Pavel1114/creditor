@@ -14,7 +14,7 @@ DEBUG = env.bool('CREDITOR_DJANGO_DEBUG', default=False)
 ALLOWED_HOSTS = env.list('CREDITOR_DJANGO_ALLOWED_HOSTS', default=[])
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'config.admin_site.CreditorAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
