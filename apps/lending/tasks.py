@@ -1,7 +1,7 @@
 import requests
 from django.core.exceptions import ValidationError
 
-from apps.lending.models import Application
+from apps.lending.models import Application, BlackIin
 from config.celery import app
 
 
@@ -14,13 +14,13 @@ def program_validator(application):
         raise ValidationError('не проходит по сумме кредита')
 
 
-def iin_is_ip_validator(application):
+def iin_is_not_ip_validator(application):
     try:
         res = requests.get('https://stat.gov.kz/api/juridical/gov/',
                            params={'lang': 'ru', 'bin': application.borrower.iin})
         if res.status_code == 200 and res.json()['success']:
             raise ValidationError('ИИН принадлежит ИП')
-        
+
     except ValidationError as e:
         raise e
     except:
@@ -28,7 +28,12 @@ def iin_is_ip_validator(application):
         pass
 
 
-validators = [iin_is_ip_validator, program_validator]
+def iin_not_in_black_list(application):
+    if BlackIin.objects.filter(iin=application.borrower.iin).exists():
+        raise ValidationError('ИИН в чёрном списке')
+
+
+validators = [iin_is_not_ip_validator, program_validator, iin_not_in_black_list]
 
 
 @app.task

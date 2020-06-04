@@ -32,8 +32,7 @@ iin_validators = [RegexValidator(r'^\d{12}$', 'ИНН должен состоя�
 
 
 class Borrower(TimeStampedModel):
-    iin = CharField('ИНН', validators=iin_validators,
-                    max_length=12, unique=True)
+    iin = CharField('ИНН', validators=iin_validators, max_length=12, unique=True)
     birthday = DateField('дата рождения', editable=False)
 
     class Meta:
@@ -82,3 +81,14 @@ class Application(TimeStampedModel):
 
     def __str__(self):
         return f'заявка {self.id}'
+
+
+class BlackIin(TimeStampedModel):
+    iin = CharField('ИНН', validators=iin_validators, max_length=12, unique=True)
+
+    class Meta:
+        verbose_name = 'заблокированный ИИН'
+        verbose_name_plural = 'заблокированные ИИН'
+
+    def __str__(self):
+        return self.iin

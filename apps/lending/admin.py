@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from apps.lending.models import Borrower, Program, Application
+from apps.lending.models import Borrower, Program, Application, BlackIin
 
 
 @admin.register(Borrower)
@@ -27,3 +27,9 @@ class ApplicationAdmin(ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+@admin.register(BlackIin)
+class BlackIinAdmin(ModelAdmin):
+    list_display = ('iin', 'created')
+    search_fields = ['iin']
