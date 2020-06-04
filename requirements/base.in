@@ -3,3 +3,4 @@ django-environ==0.4.5
 djangorestframework==3.11.0
 git+git://github.com/jazzband/django-model-utils.git@6fba04ec4ff32b34cca61c6f1770ef6e81a40e2b
 psycopg2==2.8.5
+requests==2.23.0

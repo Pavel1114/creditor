@@ -7,6 +7,7 @@ from rest_framework.viewsets import GenericViewSet
 from apps.lending.models import Application, Program, Borrower, get_birthday_from_iin
 from apps.lending.serializers import ApplicationSerializer, ProgramSerializer, ApplicationCreateSerializer, \
     BorrowerSerializer
+from apps.lending.tasks import check_application
 
 
 class BorrowerViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
@@ -33,6 +34,7 @@ class ApplicationViewSet(CreateModelMixin, RetrieveModelMixin, ListModelMixin, G
         birthday = get_birthday_from_iin(borrower_data['iin'])
         borrower, created = Borrower.objects.get_or_create(**borrower_data, birthday=birthday)
         application = serializer.save(borrower=borrower)
+        check_application(application.id)
         headers = self.get_success_headers(serializer.data)
         full_serializer = ApplicationSerializer(application, context={'request': request})
         return Response(full_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
