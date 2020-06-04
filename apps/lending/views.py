@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from apps.lending.models import Application, Program, Borrower, get_birthday_from_iin
+from apps.lending.models import Application, Program, Borrower
 from apps.lending.serializers import ApplicationSerializer, ProgramSerializer, ApplicationCreateSerializer, \
     BorrowerSerializer
 from apps.lending.tasks import check_application
@@ -32,10 +32,9 @@ class ApplicationViewSet(CreateModelMixin, RetrieveModelMixin, ListModelMixin, G
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         borrower_data = serializer.validated_data.pop('borrower')
-        birthday = get_birthday_from_iin(borrower_data['iin'])
-        borrower, created = Borrower.objects.get_or_create(**borrower_data, birthday=birthday)
+        borrower, created = Borrower.objects.get_or_create(**borrower_data)
         application = serializer.save(borrower=borrower)
-        transaction.on_commit(lambda : check_application.delay(application.id))
+        transaction.on_commit(lambda: check_application.delay(application.id))
         headers = self.get_success_headers(serializer.data)
         full_serializer = ApplicationSerializer(application, context={'request': request})
         return Response(full_serializer.data, status=status.HTTP_201_CREATED, headers=headers)

@@ -42,6 +42,10 @@ class Borrower(TimeStampedModel):
     def __str__(self):
         return self.iin
 
+    def save(self, *args, **kwargs):
+        self.birthday = get_birthday_from_iin(self.iin)
+        super().save(*args, **kwargs)
+
     @property
     def age(self):
         today = timezone.now().date()
