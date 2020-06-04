@@ -1,14 +1,38 @@
 import uuid
+from builtins import property
+from datetime import datetime
 
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, MinValueValidator
 from django.db.models import CharField, DecimalField, PositiveIntegerField, ForeignKey, \
     PROTECT, UUIDField, DateField
+from django.utils import timezone
 from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
 
+def get_birthday_from_iin(iin):
+    if int(iin[6]) < 5:
+        date_str = '19' + iin[:6]
+    else:
+        date_str = '20' + iin[:6]
+    return datetime.strptime(date_str, '%Y%m%d').date()
+
+
+def validate_birthday_in_iin(value):
+    try:
+        birthday = get_birthday_from_iin(value)
+    except ValueError:
+        raise ValidationError('неверный ИИН', code='invalid_iin')
+    if birthday > timezone.now().date():
+        raise ValidationError('неверный ИИН', code='invalid_iin_birthday_in_future')
+
+
+iin_validators = [RegexValidator(r'^\d{12}$', 'ИНН должен состоять из 12 цифр'), validate_birthday_in_iin]
+
+
 class Borrower(TimeStampedModel):
-    iin = CharField('ИНН', validators=[RegexValidator(r'^\d{12}$', 'ИНН должен состоять из 12 цифр')],
+    iin = CharField('ИНН', validators=iin_validators,
                     max_length=12, unique=True)
     birthday = DateField('дата рождения', editable=False)
 
@@ -18,6 +42,12 @@ class Borrower(TimeStampedModel):
 
     def __str__(self):
         return self.iin
+
+    @property
+    def age(self):
+        today = timezone.now().date()
+        return today.year - self.birthday.year - (
+                (today.month, today.day) < (self.birthday.month, self.birthday.day))
 
 
 class Program(TimeStampedModel):

@@ -7,7 +7,8 @@
 asgiref==3.2.7            # via django
 django-environ==0.4.5     # via -r requirements/base.in
 git+git://github.com/jazzband/django-model-utils.git@6fba04ec4ff32b34cca61c6f1770ef6e81a40e2b  # via -r requirements/base.in
-django==3.0.7             # via -r requirements/base.in, django-model-utils
+django==3.0.7             # via -r requirements/base.in, django-model-utils, djangorestframework
+djangorestframework==3.11.0  # via -r requirements/base.in
 psycopg2==2.8.5           # via -r requirements/base.in
 pytz==2020.1              # via django
 sqlparse==0.3.1           # via django
