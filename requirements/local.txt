@@ -4,3 +4,8 @@
 #
 #    pip-compile requirements/local.in
 #
+factory_boy==2.12.0       # via -r requirements/local.in
+faker==4.1.0              # via factory-boy
+python-dateutil==2.8.1    # via faker
+six==1.15.0               # via python-dateutil
+text-unidecode==1.3       # via faker
