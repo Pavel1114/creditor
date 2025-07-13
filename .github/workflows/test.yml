@@ -10,8 +10,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run tests
-        uses: docker/compose-action@v1.0.3
+        uses: isbang/compose-action@v1.2.0
         with:
-          compose-file: dev.yml
+          compose-file: "./dev.yml"
           run-command: |
             run --rm django python manage.py test
