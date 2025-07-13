@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run tests
-        uses: docker/compose-action@v1
+        uses: docker/compose-action@v1.0.3
         with:
           compose-file: dev.yml
           run-command: |
